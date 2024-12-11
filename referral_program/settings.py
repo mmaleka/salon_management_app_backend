@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-k_&94$3=l97xisl4agykcx!ykmz-uj8&@v7^)cwh2ixlrh1o5#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,8 +79,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8000',  # Add your frontend URL here
-    'http://127.0.0.1:8080',
+    '*'
 ]
 
 ROOT_URLCONF = 'referral_program.urls'
