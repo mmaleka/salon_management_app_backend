@@ -78,9 +78,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    '*'
-]
+CORS_ALLOWED_ORIGINS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['*']
 
 ROOT_URLCONF = 'referral_program.urls'
 
