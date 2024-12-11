@@ -329,6 +329,8 @@ class RewardView(APIView):
 
 
 # git remote add origin https://github.com/mmaleka/salon_management_app_backend.git
+# git add .
+# git commit -m "comments"
 # git branch -M main
 # git push -u origin main
 
