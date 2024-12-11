@@ -331,3 +331,14 @@ class RewardView(APIView):
 # git remote add origin https://github.com/mmaleka/salon_management_app_backend.git
 # git branch -M main
 # git push -u origin main
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.environ["POSTGRES_DB"],
+#         "USER": os.environ["POSTGRES_USER"],
+#         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+#         "HOST": os.environ["POSTGRES_HOST"],
+#         "PORT": os.environ["POSTGRES_PORT"],
+#     }
+# }
