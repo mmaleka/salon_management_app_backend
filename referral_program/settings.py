@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-k_&94$3=l97xisl4agykcx!ykmz-uj8&@v7^)cwh2ixlrh1o5#
 DEBUG = True
 
 ALLOWED_HOSTS = ["web-production-dff5.up.railway.app"]
-CORS_ALLOWED_ORIGINS = ["https://web-production-dff5.up.railway.app"]
+CORS_ALLOWED_ORIGINS = ["https://web-production-dff5.up.railway.app", "https://sarahsalon.netlify.app"]
 CSRF_TRUSTED_ORIGINS = ["https://web-production-dff5.up.railway.app"]
 
 
