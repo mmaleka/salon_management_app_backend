@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-k_&94$3=l97xisl4agykcx!ykmz-uj8&@v7^)cwh2ixlrh1o5#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://web-production-dff5.up.railway.app']
 
 
 # Application definition
@@ -78,9 +78,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ['*']
+CORS_ALLOWED_ORIGINS = ['https://web-production-dff5.up.railway.app']
 
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://web-production-dff5.up.railway.app']
 
 ROOT_URLCONF = 'referral_program.urls'
 
