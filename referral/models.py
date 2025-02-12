@@ -7,6 +7,20 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+
+class PointAllocation(models.Model):
+    ACTION_CHOICES = [
+        ('vist_salon', 'Client Visiting Salon'),
+        ('user_create_profile', 'Clients creates and new profile'),
+        ('reward_referrer', 'Reward the referrer'),
+    ]
+    point_name = models.CharField(max_length=255, choices=ACTION_CHOICES)
+    points = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.point_name
+    
+
 class Visit(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     visit_date = models.DateTimeField(auto_now_add=True)
@@ -14,6 +28,7 @@ class Visit(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.visit_date}"
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -49,6 +64,7 @@ class Profile(models.Model):
     points_balance = models.IntegerField(default=0)  # User's points balance
     referral_code = models.CharField(max_length=10, unique=False, blank=True)  # Referral code
     referred_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='referrals')
+    dob = models.DateField(null=True, blank=True)  # Date of Birth field
 
     def update_points(self, points, action_type):
         # Update points balance

@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
-from .models import Profile, ReferralActivity, Reward, Activity, Product, Visit
+from .models import Profile, ReferralActivity, Reward, Activity, Product, Visit, PointAllocation
 from .serializers import UserSerializer, ProfileSerializer, ReferralActivitySerializer, RewardSerializer, ProductSerializer, VisitSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -29,7 +29,9 @@ class ConfirmVisitView(APIView):
 
         if admin_user and admin_user.is_staff:
             # Award points if admin authentication is successful
-            points = 10
+            vist_salon = PointAllocation.objects.get(point_name="vist_salon")
+            print("sign_up_points: ", vist_salon.points)
+            points = vist_salon.points
             visit = Visit.objects.create(user=user, points_awarded=points)
 
             # Update the user's profile points balance
@@ -219,9 +221,28 @@ class SignupView(APIView):
         password = request.data.get('password')
         first_name = request.data.get('first_name')
         referral_code = request.data.get('referral_code')  # Optional referral code
+        dob = request.data.get('dob')  # Date of Birth (new field)
 
-        if not username or not password or not first_name:
-            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+        try:
+            # Validate the date format
+            from datetime import datetime
+            dob = datetime.strptime(dob, "%Y-%m-%d").date()
+        except ValueError:
+            return Response({'error': 'Invalid date format. Use YYYY-MM-DD'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+        # if not username or not password or not first_name:
+        #     return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not username or not password or not first_name or not dob:
+            return Response({'error': 'All fields, including date of birth, are required'}, status=status.HTTP_400_BAD_REQUEST)
 
         if User.objects.filter(username=username).exists():
             return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
@@ -229,18 +250,21 @@ class SignupView(APIView):
         # Create the user
         user = User.objects.create_user(username=username, password=password, first_name=first_name)
 
+
         # Create the profile
-        profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(user=user, dob=dob)
 
         # Handle referral code
         if referral_code:
             try:
                 referrer_profile = Profile.objects.get(referral_code=referral_code)
                 profile.referred_by = referrer_profile.user
-                profile.points_balance += 10  # Reward the new user with 10 points
-                referrer_profile.points_balance += 20  # Reward the referrer with 20 points
+                sign_up_points = PointAllocation.objects.get(point_name="user_create_profile")
+                reward_referrer = PointAllocation.objects.get(point_name="reward_referrer")
+                profile.points_balance += sign_up_points.points  # Reward the new user with 10 points
+                referrer_profile.points_balance += reward_referrer.points # Reward the referrer with 20 points
 
-                referrer_profile.update_points(20, action_type='referral')
+                referrer_profile.update_points(reward_referrer.points, action_type='referral')
 
                 referrer_profile.save()
                 profile.save()
@@ -308,7 +332,9 @@ class ReferView(APIView):
             return Response({'error': 'This email has already been referred.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Award points for the referral
-        points_awarded = 10
+        reward_referrer = PointAllocation.objects.get(point_name="reward_referrer")
+        print("sign_up_points: ", reward_referrer.points)
+        points_awarded = reward_referrer.points
         ReferralActivity.objects.create(user=user, referred_user_email=referred_email, points_awarded=points_awarded)
 
         # Update user's profile points
