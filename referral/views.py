@@ -224,8 +224,8 @@ class SignupView(APIView):
         dob = request.data.get('dob')  # Date of Birth (new field)
 
         
-        if User.objects.filter(username=username).exists():
-            return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        # if User.objects.filter(username=username).exists():
+        #     return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
         
 
         try:
@@ -252,7 +252,7 @@ class SignupView(APIView):
 
 
         # Create the profile
-        profile = Profile.objects.get(user=user, dob=dob)
+        profile = Profile.objects.get(user=user)
 
         # Handle referral code
         if referral_code:
